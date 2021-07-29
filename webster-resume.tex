@@ -1,0 +1,278 @@
+\documentclass{webster-resume}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[citestyle=verbose,url=false,doi=false,isbn=false,backend=biber]{biblatex}
+\usepackage{etaremune}
+\usepackage{changepage}
+\usepackage{siunitx}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\bibliography{bibliography}
+\usepackage[usenames]{color}
+\usepackage{tikz}
+\usepackage{doi}
+\usetikzlibrary{calc}
+\usepackage[norule,bottom]{footmisc}
+
+\definecolor{colora}{RGB}{128,0,0}
+
+\usepackage{hyperref}
+\hypersetup{\
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=colora,
+  hidelinks=true,
+  pdfauthor={Aaron Webster},
+  pdfsubject={Resume/CV},
+  pdftitle={Aaron Webster},
+}
+\urlstyle{same}
+
+
+\hyphenation{cen-trif-u-gal mi-cro-bal-ance}
+
+\DeclareFieldFormat{linked}{%
+\ifboolexpr{ test {\ifhyperref} and not test {\ifentrytype{online}} }
+{\iffieldundef{doi}
+{\iffieldundef{url}
+{\iffieldundef{isbn}
+{\iffieldundef{issn}
+{#1}
+{\href{\worldcatsearch\thefield{issn}}{#1}}}
+{\href{\worldcatsearch\thefield{isbn}}{#1}}}
+{\href{\thefieldfirstword{url}}{#1}}}
+{\href{http://dx.doi.org/\thefield{doi}}{#1}}}
+{#1}}
+
+\def\worldcatsearch{http://www.worldcat.org/search?qt=worldcat_org_all&q=}
+
+\makeatletter
+\def\thefieldfirstword#1{%
+  \expandafter\expandafter
+  \expandafter\firstword
+  \expandafter\expandafter
+  \expandafter{\csname abx@field@#1\endcsname}}
+\def\firstword#1{\firstword@i#1 \@nil}
+\def\firstword@i#1 #2\@nil{#1}
+\makeatother
+
+% Redefine url format to print only first URL, omit URL prefix
+\DeclareFieldFormat{url}{\url{\firstword{#1}}}
+
+\renewbibmacro*{title}{% Based on generic definition from biblatex.def
+  \ifboolexpr{ test {\iffieldundef{title}} and test {\iffieldundef{subtitle}} }
+    {}
+    {\printtext[title]{\printtext[linked]{%
+       \printfield[titlecase]{title}%
+       \setunit{\subtitlepunct}%
+       \printfield[titlecase]{subtitle}}}%
+     \newunit}%
+  \printfield{titleaddon}}
+
+\renewbibmacro*{periodical}{% Based on generic definition from biblatex.def
+  \iffieldundef{title}
+    {}
+    {\printtext[title]{\printtext[linked]{%
+       \printfield[titlecase]{title}%
+       \setunit{\subtitlepunct}%
+       \printfield[titlecase]{subtitle}}}}}
+
+\newenvironment{list3}{
+  \begin{list}{$\diamond$}{%
+      \setlength{\itemsep}{-0.05in}
+      \setlength{\parsep}{.05in} \setlength{\parskip}{0in}
+      \setlength{\topsep}{0in} \setlength{\partopsep}{0in} 
+      \setlength{\leftmargin}{0.2in}}}{\end{list}}
+
+\makeatletter
+\renewcommand{\@oddfoot}{\hfil \thepage/2 \hfil}
+\makeatother
+
+\begin{document}
+\name{Aaron~Webster}
+%\tikz[overlay,remember picture] {
+% \node at ($(current page.south)-(0,0)$) {\textcolor{gray}{haldo}};
+%}
+
+\href{mailto:awebster@falsecolour.com}{awebster@falsecolour.com}
+\hfill\href{https://falsecolour.com/aw}{https://falsecolour.com/aw}\\
+1~541~357~9546\\
+%4538 Thackeray PL NE\hfill+1~541~357~9546\\
+%Seattle, WA 98105\hfill\href{mailto:awebster@falsecolour.com}{awebster@falsecolour.com}
+%3035 Quiet Lane\hfill+1~541~357~9546\\
+%Eugene, OR 97404\hfill\href{mailto:awebster@falsecolour.com}{awebster@falsecolour.com}
+%730 Lupine Way\hfill+1~541~357~9546\\
+%Winters, CA 95694\hfill\href{mailto:awebster@falsecolour.com}{awebster@falsecolour.com}
+%5445 El Gato Ln\hfill+1~541~357~9546\\
+%Meridian, ID 83642\hfill\href{mailto:awebster@falsecolour.com}{awebster@falsecolour.com}
+%\url{http://falsecolour.com/aw}
+%\hfill
+\let\thefootnote\relax\footnote{\textcolor{white}{%
+Food for robots: Experience Management Project Development Business Skill Professional Knowledge Team Leadership }}%
+ 
+\section{Education}
+\vspace{-0.25em}
+{\bf Ph.D., Physics} \hfill 2015 (expected)\\
+\hspace*{1em}{Max Planck Institute for the Science of Light, Erlangen, Bavaria, Germany}\\
+\hspace*{1em}Dissertation: {\em Interference and Scattering in Surface Plasmon Resonance}
+\vspace{0.25em}
+\\
+{\bf Master of Science, Theoretical Physics: Optics} \hfill 2011\\
+\hspace*{1em}{Friedrich-Alexander-Universität Erlangen-Nürnberg, Erlangen, Bavaria, Germany}\\
+\hspace*{1em}Thesis: {\em Ultrashort Pulses in Focal Regions}
+\vspace{0.25em}
+\\
+{\bf Master of Science, Applied Physics: Optics} \hfill 2009\\
+\hspace*{1em}{University of Oregon, Eugene, Oregon, USA}
+\vspace{0.25em}
+\\
+{\bf Bachelor of Science, Physics}\\
+\hspace*{1em}{University of Oregon,  Eugene, Oregon, USA} \hfill 2007
+
+\vspace{-1em}
+\section{Research Experience}
+\vspace{-0.25em}
+\begin{resitem}[2011-present]
+ {\bf Max Planck Institute for the Science of Light} Dr\@. Rer\@. Nat\@.  Frank Vollmer \\
+ \textsl{Graduate student, theoretical and experimental.}  Research on ultrasensitive biodetection using
+ mesoscopic properties of surface plasmon polariton scattering and new
+applications of quartz crystal microbalances.
+ \begin{list3}
+	\item Discovered and implemented a new mechanism for nanoparticle detection in surface plasmon resonance.
+ \item Conducted significant research regarding quartz crystal
+  microbalances in centrifugal force fields, leading to a novel type of instrument (see \textsc{Patents}).
+ \item Successfully designed and carried out experiments involving advanced
+  biochemistry: oligonucleotides, lambda DNA, self assembled monolayers,
+  and functionalized nanoparticles.
+ \end{list3}
+\end{resitem}
+
+\begin{resitem}[2010-2011]
+{\bf Friedrich-Alexander-Universität Erlangen-Nürnberg} Professor Norbert Lindlein\\
+\textsl{Master student, theoretical}.  Work included theoretical modeling and cluster distributed numerical
+simulation of ultrashort pulses in the focal region of high numerical
+aperture optical systems.
+ \begin{list3}
+ \item{Wrote a highly parallel cluster implementation of a discrete Fourier
+  transform for fast computation of focussed fields.}
+ \end{list3} 
+\end{resitem}
+
+\begin{resitem}[2009-2010]
+{\bf University of Oregon} Professor Stephen Gregory\\
+\textsl{Guest researcher, theoretical.}  Numerical simulations of surface plasmon polariton
+multiple scattering using apertureless near-field probes.
+\end{resitem}
+
+\begin{resitem}[2007-2009]
+{\bf Light Beam Industries, Eugene, Oregon, USA}\\
+\textsl{Senior technician, research and development, optics and electronics.}  Designed and
+integrated digital and analog circuitry for power, control, and thermal
+management of the company's LED based optical products.  
+\begin{list3}
+\item Produced fifteen different documented printed circuit boards.  Five
+in production, three board revisions, zero functional mistakes.  Topology includes microcontrollers,
+power management, data acquisition and communication.
+\item Designed and constructed a one meter diameter integrating sphere for accurate
+photometry measurements.
+\end{list3}
+\end{resitem}
+
+\begin{resitem}[2007]
+{\bf Boise Technology, Nampa, Idaho, USA}\\
+\textsl{Research assistant, experimental.}  Studied organic/aqueous (biphasic) solvent systems in
+order to further understanding of the chemistry related to chemical warfare
+decontamination.
+\begin{list3}
+\item Designed and built a Lewis Cell for stirred, biphasic UV-Vis
+experiments.  Device included the creation of a custom low turbulence
+impeller stirrer.
+\end{list3}
+\end{resitem}
+
+\begin{resitem}[2005-2007]
+{\bf University of Oregon} Professor Dan Steck\\
+\textsl{Undergraduate research assistant, experimental.}
+Designed and constructed many scientific instruments to assist in ongoing
+atom optics research.
+\begin{list3}
+\item Designed and built a one meter long scanning Michelson interferometer to measure
+detuned lasers with resolution of about $1$ in $10^{6}$. 
+\item Constructed a superior quality low noise, high-speed single/differential
+photodiode detector.
+\item Built and tested a high vacuum housing for an avalanche photodiode
+capable of single photon detection.
+\item Made an economical tunable extended cavity diode laser of appreciable quality used for
+undergraduate research.  
+\end{list3}
+\end{resitem}
+
+\vspace{-1em}
+\section{Publications}
+\vspace{-0.25em}
+\begin{list3}
+\item \fullcite{webster2014qcm}
+\item \fullcite{webster2013interference}
+\end{list3}
+
+\vspace{-1em}
+\section{Patents}
+\vspace{-0.25em}
+\begin{list3}
+\item \fullcite{cfqcm}
+\end{list3}
+
+\vspace{-1em}
+\section{Students Supervised}
+\begin{list3}
+\item Jiapeng Huang (Master)\hfill2013-2014\\
+\hspace*{1em}Thesis: {\em Speckle Detection of Surface Plasmon Polaritons}
+\end{list3}
+
+\vspace{-1em}
+\section{Related Experience}
+\vspace{-0.25em}
+\subsection{Computer}
+\begin{list3}
+\item Languages: C, MATLAB/Octave, Perl, Bash (proficient),
+C++, Python, PHP, SQL (experienced).
+\item Adept with Linux, OS X, and Windows operating systems. 
+\item Physics programing projects include Fourier analysis,
+optimization algorithms, process control (PID) loops, finite-element analysis.
+\item Experience programming with large datasets in parallel and cluster
+ environments (MPI on Beowulf clusters, CUDA/OpenCL, pthreads).
+\end{list3}
+\vspace{-1em}
+
+\subsection{Electronics}
+\begin{list3}
+\item Proficient with microcontrollers (AVR) and embedded devices. 
+\item Designed and worked with analog, digital, and mixed topologies.
+\item Experience with small to medium scale PCB manufacturing: surface mount components, reflow
+soldering, testing.
+\end{list3}
+\vspace{-1em}
+
+\subsection{Fabrication}
+\begin{list3}
+\item Experience machining countless parts; vacuum components,
+optical mounts, lenses.
+\item Ability to operate both manual and CNC milling machines, lathes
+ (Haas, Bridgeport) and laser systems (Epilog).  Familiarity with CAD/CAM
+	softwares (Solid Edge, Mastercam) to generate machine code.
+\item Fabrication with TIG, MIG, stick-arc, and oxy-fuel cutting and
+welding.
+\item Other experience includes spin coating, sputtering.
+\end{list3}
+\vspace{-1em}
+
+\section{Languages}
+\vspace{-0.25em}
+English (native)
+German (\href{http://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages}{CEF B1}, conversational)
+Spanish (\href{http://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages}{CEF A2}, good)
+
+\let\thefootnote\relax\footnote{\textcolor{white}{%
+Compiled \today, \input{commithash}%
+}}
+
+\end{document} 
