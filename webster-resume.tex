@@ -1,11 +1,13 @@
 \documentclass{webster-resume}
+% The 1989-vintage class calls \nofiles, which disables the .aux/.bcf files
+% that biblatex and \pageref need.  Turn them back on.
+\makeatletter\@fileswtrue\makeatother
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[citestyle=verbose,url=false,doi=false,isbn=false,backend=biber]{biblatex}
+\usepackage[citestyle=verbose,maxnames=6,url=false,doi=false,isbn=false,eprint=false,backend=biber]{biblatex}
 \usepackage{etaremune}
 \usepackage{changepage}
-\usepackage{siunitx}
-\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage[a4paper,left=3.0cm,right=1.8cm,top=1.9cm,bottom=1.9cm]{geometry}
 \bibliography{bibliography}
 \usepackage[usenames]{color}
 \usepackage{tikz}
@@ -16,19 +18,19 @@
 \definecolor{colora}{RGB}{128,0,0}
 
 \usepackage{hyperref}
-\hypersetup{\
+\hypersetup{%
   colorlinks=true,
   linkcolor=blue,
   urlcolor=colora,
-  hidelinks=true,
   pdfauthor={Aaron Webster},
   pdfsubject={Resume/CV},
   pdftitle={Aaron Webster},
+  pdfkeywords={embedded systems, firmware, FPGA, MicroBlaze, PTP, IEEE 1588,
+    C++, Python, camera hardware, Emboss, physics, optics, biosensors},
 }
 \urlstyle{same}
 
-
-\hyphenation{cen-trif-u-gal mi-cro-bal-ance}
+\hyphenation{cen-trif-u-gal mi-cro-bal-ance Micro-Blaze}
 
 \DeclareFieldFormat{linked}{%
 \ifboolexpr{ test {\ifhyperref} and not test {\ifentrytype{online}} }
@@ -40,10 +42,10 @@
 {\href{\worldcatsearch\thefield{issn}}{#1}}}
 {\href{\worldcatsearch\thefield{isbn}}{#1}}}
 {\href{\thefieldfirstword{url}}{#1}}}
-{\href{http://dx.doi.org/\thefield{doi}}{#1}}}
+{\href{https://doi.org/\thefield{doi}}{#1}}}
 {#1}}
 
-\def\worldcatsearch{http://www.worldcat.org/search?qt=worldcat_org_all&q=}
+\def\worldcatsearch{https://www.worldcat.org/search?qt=worldcat_org_all&q=}
 
 \makeatletter
 \def\thefieldfirstword#1{%
@@ -76,203 +78,224 @@
        \setunit{\subtitlepunct}%
        \printfield[titlecase]{subtitle}}}}}
 
+% The class shifts the whole text block right by \hoffset to make room for
+% its section titles; geometry already reserved a wide left margin, so undo
+% that and hang the titles into the margin ourselves.
+\hoffset=0pt
+
+% Section titles hang in the left margin, right-aligned against the text.
+\newlength{\secgap}\setlength{\secgap}{0.32cm}
+\newcommand{\seclabel}[1]{\llap{{\small\bfseries #1}\hskip\secgap}}
+% Vertical space before a section.
+\newcommand{\secsp}{\par\addvspace{0.75em plus 0.2em}}
+% A section whose body starts with running text.
+\newcommand{\rsection}[1]{\secsp\noindent\seclabel{#1}\ignorespaces}
+% Label for the first item of a list that opens a section.
+\newcommand{\lsection}[1]{\seclabel{#1}$\diamond$}
+
+% Compact bulleted list used throughout.
 \newenvironment{list3}{
   \begin{list}{$\diamond$}{%
       \setlength{\itemsep}{-0.05in}
       \setlength{\parsep}{.05in} \setlength{\parskip}{0in}
-      \setlength{\topsep}{0in} \setlength{\partopsep}{0in} 
+      \setlength{\topsep}{0in} \setlength{\partopsep}{0in}
       \setlength{\leftmargin}{0.2in}}}{\end{list}}
 
+% One entry (job, degree, project).  The optional argument is the date
+% range; \resdate typesets it flush right on the current line.
+\newenvironment{resitem}[1][]{%
+  \par\addvspace{0.5em}\noindent\def\resdate{\hfill{\small #1}}%
+  \begin{minipage}{\textwidth}\noindent}{\end{minipage}\par}
+
+\usepackage{lastpage}
 \makeatletter
-\renewcommand{\@oddfoot}{\hfil \thepage/2 \hfil}
+\renewcommand{\@oddfoot}{\hfil \thepage/\pageref{LastPage} \hfil}
 \makeatother
 
 \begin{document}
 \name{Aaron~Webster}
-%\tikz[overlay,remember picture] {
-% \node at ($(current page.south)-(0,0)$) {\textcolor{gray}{haldo}};
-%}
 
 \href{mailto:awebster@falsecolour.com}{awebster@falsecolour.com}
 \hfill\href{https://falsecolour.com/aw}{https://falsecolour.com/aw}\\
-1~541~357~9546\\
-%4538 Thackeray PL NE\hfill+1~541~357~9546\\
-%Seattle, WA 98105\hfill\href{mailto:awebster@falsecolour.com}{awebster@falsecolour.com}
-%3035 Quiet Lane\hfill+1~541~357~9546\\
-%Eugene, OR 97404\hfill\href{mailto:awebster@falsecolour.com}{awebster@falsecolour.com}
-%730 Lupine Way\hfill+1~541~357~9546\\
-%Winters, CA 95694\hfill\href{mailto:awebster@falsecolour.com}{awebster@falsecolour.com}
-%5445 El Gato Ln\hfill+1~541~357~9546\\
-%Meridian, ID 83642\hfill\href{mailto:awebster@falsecolour.com}{awebster@falsecolour.com}
-%\url{http://falsecolour.com/aw}
-%\hfill
-\let\thefootnote\relax\footnote{\textcolor{white}{%
-Food for robots: Experience Management Project Development Business Skill Professional Knowledge Team Leadership }}%
- 
-\section{Education}
-\vspace{-0.25em}
-{\bf Ph.D., Physics} \hfill 2015 (expected)\\
-\hspace*{1em}{Max Planck Institute for the Science of Light, Erlangen, Bavaria, Germany}\\
-\hspace*{1em}Dissertation: {\em Interference and Scattering in Surface Plasmon Resonance}
-\vspace{0.25em}
++1~541~357~9546
+\hfill\href{https://github.com/AaronWebster}{github.com/AaronWebster}\\
+Canyon, California (San Francisco Bay Area)
+
+\rsection{Summary}
+Physicist turned embedded systems engineer.  Over ten years at Google building
+custom camera hardware and firmware for real-world imagery capture: FPGA
+soft-core firmware, precision time synchronization (IEEE~1588), high-speed
+sensor data paths, and the bench tooling that brings new hardware up.
+Ph.D.\ in physics with first-author papers in \emph{Nature Communications}
+and \emph{Optics Letters} and a patented instrument.  Builds AI-agent-driven
+engineering workflows (MCP servers, autonomous coding agents) around real
+hardware.
+
+\secsp
+\begin{resitem}[2015--present]
+\seclabel{Experience}{\bf Google LLC}, Mountain View, California\resdate\\
+\textsl{Software Engineer, Geo.}  Embedded and systems engineer on the team
+that designs and operates Google's custom camera platforms for capturing
+ground-level imagery for Google Maps.
+\begin{list3}
+\item Own firmware for Xilinx FPGA-based camera systems: C/C++ on the
+  MicroBlaze soft core, AXI-mapped peripherals (SPI, I\textsuperscript{2}C,
+  MDIO, UART, GPIO), register maps, bitstream and ELF management, board
+  bring-up, self-test, and validation over JTAG and UDP.
+\item Lead precision time synchronization and its validation across camera
+  networks (IEEE~1588 PTP, hardware timestamping, transparent clocks).
+  Designed an offline timeline-reconstruction estimator (Kalman filter with
+  Rauch--Tung--Striebel smoothing and Allan-variance oscillator models) that
+  maps free-running sensor timestamps onto a grandmaster UTC timeline;
+  characterized oscillator drift and thermal behavior in deployed units.
+\item Built and maintain the team's camera development tool, a C++ CLI/TUI
+  for hardware bring-up: register-tree and bus-topology browsing, self-test,
+  usage telemetry, remote control over TCP/SSH, and an MCP server so AI
+  coding agents can drive bench hardware directly.  Packaged for Debian.
+\item Define wire formats and register layouts in Emboss (Google's open-source
+  binary structure language) with generated C++ views; frame, metadata, and
+  hardware-telemetry datagram protocols for 1G/10G Ethernet egress with DDR
+  buffering, validated with capture-and-decode tooling.
+\item Replaced a vendor-specific Ethernet PHY driver with a spec-compliant
+  MDIO Clause~45 driver with deterministic link bring-up, isolating
+  device-specific code paths ahead of an I/O board respin.
+\item Introduced agent-driven development to the team: scheduled autonomous
+  coding agents working a file-based issue queue behind test and lint gates,
+  design-document review conventions, and local retrieval tooling over
+  datasheets and register documentation.
+\end{list3}
+\end{resitem}
+
+\begin{resitem}[2011--2015]
+{\bf Max Planck Institute for the Science of Light}, Erlangen, Germany\resdate\\
+\textsl{Doctoral researcher, Laboratory of Nanophotonics and Biosensing
+(Dr.~Frank Vollmer).}  Theoretical and experimental research on
+ultrasensitive label-free biodetection.
+\begin{list3}
+\item Invented the centrifugal force quartz crystal microbalance, a
+  force-based biosensor that probes a sample's mechanical properties
+  non-destructively in real time (\emph{Nature Communications} 2014; PCT
+  patent application).
+\item Discovered and modeled a new interference mechanism in conically
+  scattered surface plasmon light, then used plasmon speckle to resolve
+  single-nanoparticle events in an unmodified SPR setup (\emph{Optics
+  Letters} 2013; \emph{Nanotechnology} 2022).
+\item Designed and ran experiments with oligonucleotides, lambda DNA,
+  self-assembled monolayers, and functionalized nanoparticles; built the
+  optics, electronics, and data acquisition for each instrument.  Supervised
+  a master's thesis (Jiapeng Huang, 2014).
+\end{list3}
+\end{resitem}
+
+\begin{resitem}[2009--2011]
+{\bf Friedrich-Alexander-Universit\"at Erlangen-N\"urnberg} and
+{\bf University of Oregon}\resdate\\
+\textsl{Master's researcher (Prof.~Norbert Lindlein); guest researcher
+(Prof.~Stephen Gregory).}  Modeled ultrashort pulses in the focal region of
+high-NA optics, with a parallel cluster implementation of the discrete
+Fourier transform; simulated surface plasmon polariton multiple scattering
+from apertureless near-field probes.
+\end{resitem}
+
+\begin{resitem}[2007--2009]
+{\bf Light Beam Industries}, Eugene, Oregon\resdate\\
+\textsl{Senior technician, R\&D, optics and electronics.}  Designed digital,
+analog, and mixed-signal circuitry for power, control, and thermal management
+of LED optical products (fifteen documented PCBs, five in production, zero
+functional errors) and built a one-meter integrating sphere for photometry.
+\end{resitem}
+
+\begin{resitem}[2005--2007]
+{\bf University of Oregon}, Eugene, Oregon\resdate\\
+\textsl{Undergraduate research assistant (Prof.~Daniel Steck).}  Built atom
+optics instrumentation: a one-meter scanning Michelson interferometer (1 in
+$10^{6}$ resolution), low-noise high-speed photodiode detectors, a
+high-vacuum single-photon avalanche photodiode housing, and a tunable
+extended-cavity diode laser.
+\end{resitem}
+
+\rsection{Education}%
+{\bf Dr.\ rer.\ nat.\ (Ph.D.), Physics} \hfill 2018\\
+\hspace*{1em}FAU Erlangen-N\"urnberg and Max Planck Institute for the Science of Light, Erlangen, Germany\\
+\hspace*{1em}Dissertation: \emph{Novel Methods in Optical and Mechanical Biosensors}
+\vspace{0.2em}
 \\
 {\bf Master of Science, Theoretical Physics: Optics} \hfill 2011\\
-\hspace*{1em}{Friedrich-Alexander-Universität Erlangen-Nürnberg, Erlangen, Bavaria, Germany}\\
-\hspace*{1em}Thesis: {\em Ultrashort Pulses in Focal Regions}
-\vspace{0.25em}
+\hspace*{1em}FAU Erlangen-N\"urnberg, Erlangen, Germany.  Thesis: \emph{Ultrashort Pulses in Focal Regions}
+\vspace{0.2em}
 \\
 {\bf Master of Science, Applied Physics: Optics} \hfill 2009\\
-\hspace*{1em}{University of Oregon, Eugene, Oregon, USA}
-\vspace{0.25em}
+\hspace*{1em}University of Oregon, Eugene, Oregon
+\vspace{0.2em}
 \\
-{\bf Bachelor of Science, Physics}\\
-\hspace*{1em}{University of Oregon,  Eugene, Oregon, USA} \hfill 2007
+{\bf Bachelor of Science, Physics} \hfill 2007\\
+\hspace*{1em}University of Oregon, Eugene, Oregon
 
-\vspace{-1em}
-\section{Research Experience}
-\vspace{-0.25em}
-\begin{resitem}[2011-present]
- {\bf Max Planck Institute for the Science of Light} Dr\@. Rer\@. Nat\@.  Frank Vollmer \\
- \textsl{Graduate student, theoretical and experimental.}  Research on ultrasensitive biodetection using
- mesoscopic properties of surface plasmon polariton scattering and new
-applications of quartz crystal microbalances.
- \begin{list3}
-	\item Discovered and implemented a new mechanism for nanoparticle detection in surface plasmon resonance.
- \item Conducted significant research regarding quartz crystal
-  microbalances in centrifugal force fields, leading to a novel type of instrument (see \textsc{Patents}).
- \item Successfully designed and carried out experiments involving advanced
-  biochemistry: oligonucleotides, lambda DNA, self assembled monolayers,
-  and functionalized nanoparticles.
- \end{list3}
-\end{resitem}
-
-\begin{resitem}[2010-2011]
-{\bf Friedrich-Alexander-Universität Erlangen-Nürnberg} Professor Norbert Lindlein\\
-\textsl{Master student, theoretical}.  Work included theoretical modeling and cluster distributed numerical
-simulation of ultrashort pulses in the focal region of high numerical
-aperture optical systems.
- \begin{list3}
- \item{Wrote a highly parallel cluster implementation of a discrete Fourier
-  transform for fast computation of focussed fields.}
- \end{list3} 
-\end{resitem}
-
-\begin{resitem}[2009-2010]
-{\bf University of Oregon} Professor Stephen Gregory\\
-\textsl{Guest researcher, theoretical.}  Numerical simulations of surface plasmon polariton
-multiple scattering using apertureless near-field probes.
-\end{resitem}
-
-\begin{resitem}[2007-2009]
-{\bf Light Beam Industries, Eugene, Oregon, USA}\\
-\textsl{Senior technician, research and development, optics and electronics.}  Designed and
-integrated digital and analog circuitry for power, control, and thermal
-management of the company's LED based optical products.  
+\secsp
 \begin{list3}
-\item Produced fifteen different documented printed circuit boards.  Five
-in production, three board revisions, zero functional mistakes.  Topology includes microcontrollers,
-power management, data acquisition and communication.
-\item Designed and constructed a one meter diameter integrating sphere for accurate
-photometry measurements.
+\item[\lsection{Skills}] {\bf Languages:} C, C++ (modern), Python, Bash
+  (expert); TypeScript/JavaScript, MATLAB/Octave, Tcl, Starlark/Bazel, Perl,
+  SQL, \LaTeX{} (experienced); 6502 and MicroBlaze assembly (working).
+\item {\bf Embedded and hardware:} Xilinx/AMD FPGA platforms (MicroBlaze, AXI,
+  Vivado, bitstreams), JTAG debug, SPI/I\textsuperscript{2}C/UART/MDIO,
+  Ethernet PHYs and 1G/10G data paths, DDR buffering, IEEE~1588 PTP and
+  hardware timestamping, image sensors and camera pipelines, Emboss, Linux
+  kernel modules and DKMS, Debian packaging.
+\item {\bf Modeling and signal processing:} Kalman filtering and smoothing,
+  Allan variance and oscillator noise, Fourier optics, FDTD simulation
+  (meep), finite-element analysis, PID control, MPI/CUDA parallel computing.
+\item {\bf AI-assisted engineering:} Claude Code and MCP server design,
+  autonomous agent workflows with test gates, local LLM inference, hybrid
+  BM25/embedding retrieval (SQLite FTS5, ONNX), PyTorch.
+\item {\bf Electronics and fabrication:} schematic and PCB design, SMT
+  assembly and reflow, mixed-signal debug; manual and CNC machining (Haas,
+  Bridgeport), CAD/CAM (Solid Edge, Mastercam), laser cutting, TIG/MIG/stick
+  welding, spin coating, sputtering.
 \end{list3}
-\end{resitem}
 
-\begin{resitem}[2007]
-{\bf Boise Technology, Nampa, Idaho, USA}\\
-\textsl{Research assistant, experimental.}  Studied organic/aqueous (biphasic) solvent systems in
-order to further understanding of the chemistry related to chemical warfare
-decontamination.
+\secsp
 \begin{list3}
-\item Designed and built a Lewis Cell for stirred, biphasic UV-Vis
-experiments.  Device included the creation of a custom low turbulence
-impeller stirrer.
-\end{list3}
-\end{resitem}
-
-\begin{resitem}[2005-2007]
-{\bf University of Oregon} Professor Dan Steck\\
-\textsl{Undergraduate research assistant, experimental.}
-Designed and constructed many scientific instruments to assist in ongoing
-atom optics research.
-\begin{list3}
-\item Designed and built a one meter long scanning Michelson interferometer to measure
-detuned lasers with resolution of about $1$ in $10^{6}$. 
-\item Constructed a superior quality low noise, high-speed single/differential
-photodiode detector.
-\item Built and tested a high vacuum housing for an avalanche photodiode
-capable of single photon detection.
-\item Made an economical tunable extended cavity diode laser of appreciable quality used for
-undergraduate research.  
-\end{list3}
-\end{resitem}
-
-\vspace{-1em}
-\section{Publications}
-\vspace{-0.25em}
-\begin{list3}
+\item[\lsection{Publications}] \fullcite{lee2022nanoisland}
 \item \fullcite{webster2014qcm}
 \item \fullcite{webster2013interference}
+\item \fullcite{webster2018thesis}
 \end{list3}
 
-\vspace{-1em}
-\section{Patents}
-\vspace{-0.25em}
+\secsp
 \begin{list3}
-\item \fullcite{cfqcm}
+\item[\lsection{Patents}] \fullcite{cfqcm}
 \end{list3}
 
-\vspace{-1em}
-\section{Students Supervised}
+\secsp
 \begin{list3}
-\item Jiapeng Huang (Master)\hfill2013-2014\\
-\hspace*{1em}Thesis: {\em Speckle Detection of Surface Plasmon Polaritons}
+\item[\lsection{Projects}] Open-source Emboss packet definitions for USB
+  Power Delivery, UniFi, and cemuhook protocols.
+\item Patched Linux \texttt{hid-playstation} kernel driver exposing DualSense
+  Edge paddles and function buttons, distributed via DKMS.
+\item Real-time PCM to Dolby Digital (AC-3) IEC~61937 encoder daemon in C;
+  firmware analysis of a Dolby DP564 decoder (MPC860, dual DSPs) for a
+  network audio tap.
+\item HALDO Labs: independent game studio publishing browser games in
+  TypeScript and a 6502 assembly port for the Atari 800.
 \end{list3}
 
-\vspace{-1em}
-\section{Related Experience}
-\vspace{-0.25em}
-\subsection{Computer}
+\secsp
 \begin{list3}
-\item Languages: C, MATLAB/Octave, Perl, Bash (proficient),
-C++, Python, PHP, SQL (experienced).
-\item Adept with Linux, OS X, and Windows operating systems. 
-\item Physics programing projects include Fourier analysis,
-optimization algorithms, process control (PID) loops, finite-element analysis.
-\item Experience programming with large datasets in parallel and cluster
- environments (MPI on Beowulf clusters, CUDA/OpenCL, pthreads).
+\item[\lsection{Service}] Director, Board of the Canyon Education Foundation
+  \hfill 2026--present
+\item Volunteer technology lead, Canyon Elementary School District: network,
+  Google Workspace administration, website and DNS migration, and ChromeOS
+  fleet automation with the Google Admin SDK and Chrome Policy API
+  \hfill 2021--present
 \end{list3}
-\vspace{-1em}
 
-\subsection{Electronics}
-\begin{list3}
-\item Proficient with microcontrollers (AVR) and embedded devices. 
-\item Designed and worked with analog, digital, and mixed topologies.
-\item Experience with small to medium scale PCB manufacturing: surface mount components, reflow
-soldering, testing.
-\end{list3}
-\vspace{-1em}
-
-\subsection{Fabrication}
-\begin{list3}
-\item Experience machining countless parts; vacuum components,
-optical mounts, lenses.
-\item Ability to operate both manual and CNC milling machines, lathes
- (Haas, Bridgeport) and laser systems (Epilog).  Familiarity with CAD/CAM
-	softwares (Solid Edge, Mastercam) to generate machine code.
-\item Fabrication with TIG, MIG, stick-arc, and oxy-fuel cutting and
-welding.
-\item Other experience includes spin coating, sputtering.
-\end{list3}
-\vspace{-1em}
-
-\section{Languages}
-\vspace{-0.25em}
-English (native)
-German (\href{http://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages}{CEF B1}, conversational)
-Spanish (\href{http://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages}{CEF A2}, good)
+\rsection{Languages}%
+English (native),
+German (\href{https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages}{CEF B1}, conversational),
+Spanish (\href{https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages}{CEF A2}).
 
 \let\thefootnote\relax\footnote{\textcolor{white}{%
 Compiled \today, \input{commithash}%
 }}
 
-\end{document} 
+\end{document}
