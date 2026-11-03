@@ -108,8 +108,11 @@
   \begin{minipage}{\textwidth}\noindent}{\end{minipage}\par}
 
 \usepackage{lastpage}
+% Footer: page x/y, plus an invisible build stamp (date and commit) that
+% costs no body space.
 \makeatletter
-\renewcommand{\@oddfoot}{\hfil \thepage/\pageref{LastPage} \hfil}
+\renewcommand{\@oddfoot}{\hfil \thepage/\pageref{LastPage}%
+  \rlap{\textcolor{white}{\tiny\ Compiled \today, \input{commithash}}}\hfil}
 \makeatother
 
 \begin{document}
@@ -122,96 +125,125 @@
 Canyon, California (San Francisco Bay Area)
 
 \rsection{Summary}
-Physicist turned embedded systems engineer.  Over ten years at Google building
-custom camera hardware and firmware for real-world imagery capture: FPGA
-soft-core firmware, precision time synchronization (IEEE~1588), high-speed
-sensor data paths, and the bench tooling that brings new hardware up.
-Ph.D.\ in physics with first-author papers in \emph{Nature Communications}
-and \emph{Optics Letters} and a patented instrument.  Builds AI-agent-driven
-engineering workflows (MCP servers, autonomous coding agents) around real
-hardware.
+Physicist turned embedded systems engineer who works across the
+hardware/software boundary.  Over ten years at Google building the sensor
+platforms behind Street View: the IEEE~1588 time-synchronization stack,
+lossless multi-10\,GbE capture data planes, and the MicroBlaze firmware and
+bring-up tooling on the camera FPGAs.  Ph.D.\ in physics with first-author
+papers in \emph{Nature Communications} and \emph{Optics Letters} and a
+patented instrument.  Reads Verilog, probes boards, ships production C++,
+and makes hardware debuggable by people and AI agents alike.
+
+\secsp
+\begin{list3}
+\item[\lsection{Strengths}] {\bf Precision timing:} IEEE~1588 PTP, hardware
+  timestamping, transparent clocks, clock modeling and interpolation (Kalman
+  and RTS smoothing, PCHIP, integer-only FPGA arithmetic), PTP-scheduled
+  triggering, TDEV and Allan-variance validation, TSN.
+\item {\bf FPGA and embedded firmware:} AMD/Xilinx MicroBlaze on UltraScale+
+  and Kintex, AXI peripherals, Vivado, JTAG and IBERT bring-up, POST,
+  watchdogs, A/B flash update over quad-SPI; STM32, ESP32, AVR.
+\item {\bf High-rate Linux data planes:} \texttt{PACKET\_RX\_RING}
+  (TPACKET\_V3) with BPF, \texttt{SO\_TXTIME}, zero-copy shared memory,
+  multi-10\,GbE capture; 10G PHYs, SFP+, MDIO Clause~45.
+\item {\bf Hardware/software integration:} board bring-up, root-causing
+  electrical faults, hardware-in-the-loop benches, Wireshark dissectors,
+  Emboss binary-format code generation, Debian packaging.
+\item {\bf AI-native engineering:} agentic coding workflows (Claude Code,
+  Gemini CLI, Copilot agents), MCP tool servers, local LLM and Whisper
+  inference on self-run GPU infrastructure.
+\item {\bf Languages:} C, C++, Python, Bash (expert); TypeScript, MATLAB,
+  Tcl, Lua, Starlark/Bazel, SQL, \LaTeX{} (experienced); Verilog (reading).
+\end{list3}
 
 \secsp
 \begin{resitem}[2015--present]
 \seclabel{Experience}{\bf Google LLC}, Mountain View, California\resdate\\
-\textsl{Software Engineer, Geo.}  Embedded and systems engineer on the team
-that designs and operates Google's custom camera platforms for capturing
-ground-level imagery for Google Maps.
+\textsl{Software Engineer, Geo Hardware (Street View sensor platforms).}
+Contractor 2015, full-time from February 2016, promoted 2017, tech lead
+since 2018.  Software lead on the previous-generation capture system;
+embedded software lead for the FPGA team since 2024.
 \begin{list3}
-\item Own firmware for Xilinx FPGA-based camera systems: C/C++ on the
-  MicroBlaze soft core, AXI-mapped peripherals (SPI, I\textsuperscript{2}C,
-  MDIO, UART, GPIO), register maps, bitstream and ELF management, board
-  bring-up, self-test, and validation over JTAG and UDP.
-\item Lead precision time synchronization and its validation across camera
-  networks (IEEE~1588 PTP, hardware timestamping, transparent clocks).
-  Designed an offline timeline-reconstruction estimator (Kalman filter with
-  Rauch--Tung--Striebel smoothing and Allan-variance oscillator models) that
-  maps free-running sensor timestamps onto a grandmaster UTC timeline;
-  characterized oscillator drift and thermal behavior in deployed units.
-\item Built and maintain the team's camera development tool, a C++ CLI/TUI
-  for hardware bring-up: register-tree and bus-topology browsing, self-test,
-  usage telemetry, remote control over TCP/SSH, and an MCP server so AI
-  coding agents can drive bench hardware directly.  Packaged for Debian.
-\item Define wire formats and register layouts in Emboss (Google's open-source
-  binary structure language) with generated C++ views; frame, metadata, and
-  hardware-telemetry datagram protocols for 1G/10G Ethernet egress with DDR
-  buffering, validated with capture-and-decode tooling.
-\item Replaced a vendor-specific Ethernet PHY driver with a spec-compliant
-  MDIO Clause~45 driver with deterministic link bring-up, isolating
-  device-specific code paths ahead of an I/O board respin.
-\item Introduced agent-driven development to the team: scheduled autonomous
-  coding agents working a file-based issue queue behind test and lint gates,
-  design-document review conventions, and local retrieval tooling over
-  datasheets and register documentation.
+\item {\bf Time synchronization.}  Wrote the PTP synchronization stack and
+  algorithms used across the team's current systems: an FPGA offset
+  estimator in unsigned-integer arithmetic, an $n\log n$ local-to-global
+  time interpolator, a clock interpolator designed for $\sigma<4$\,ns over
+  four hours (min-RTT anchoring, PCHIP), and PTP-scheduled triggering for a
+  seven-camera array.  Characterized clocks against a rubidium standard,
+  Intel and Broadcom NICs, and PPS; offline oscillator analysis traced the
+  cameras that kept failing to 5--10\,ppm drift and drove a better
+  oscillator onto the board respin.
+\item {\bf Capture data plane.}  Built the data plane, FPGA integration, and
+  OS image of the previous-generation Street View capture system.  Designed
+  the next platform's data plane: lossless capture of multiple saturated
+  10\,GbE links via zero-copy \texttt{PACKET\_RX\_RING} and BPF, message
+  reassembly, self-describing packet headers with hierarchical drop
+  counters, picosecond-timestamped frames published over shared memory with
+  multicast announcement, and a pktgen testbed simulating multiple 10G
+  streams.
+\item {\bf Camera FPGA firmware (2024--present).}  Own the MicroBlaze control
+  plane of the next-generation vehicle camera: UDP command and logging,
+  power-on self-test (DDR, PHY link, temperatures), watchdog, and A/B
+  firmware upgrade over quad-SPI.  Shipping production firmware releases
+  since early 2026; validated PTP against a reference grandmaster with TDEV.
+\item {\bf Bring-up and root cause.}  Traced intermittent camera link
+  failures to an under-specified crystal on the 10G PHY; found an AUX-board
+  capacitor killing the UART; drove the 10G PHY mode decision with the
+  silicon vendor's FAE; flagged an outsourced camera design as high risk
+  early, before it was replaced by an in-house design.  Took on
+  electrical-engineering work after a reorg: board rework, custom SFP
+  modules, a relay-automated hardware-in-the-loop bench for camera batches.
+\item {\bf Developer tooling.}  Built the team's camera bring-up and debug
+  tool (C++ TUI and CLI over JTAG and UDP, self-test, bundled bitstreams,
+  usage telemetry, Debian packaging), with an MCP interface for AI coding
+  agents in development; Wireshark dissectors; Emboss-defined wire formats
+  and register maps with generated C++ views.
+\item {\bf Influence.}  Internal talks on timelines and PTP (2023) and on
+  ``AI is the consumer'' and actionable visibility (2026); about a dozen
+  technical interviews a month.
 \end{list3}
 \end{resitem}
 
+\secsp
+\begin{list3}
+\item[\lsection{Open source}] \textbf{\href{https://github.com/google/emboss}{google/emboss}},
+  Google's binary-structure compiler for embedded C++: 25 merged pull
+  requests, 2020--2026.  Optimized generated C++ validation for structures
+  with many conditional fields; added flooring division and modulus with
+  undefined-value propagation; an embedded code-size benchmark with a CI
+  pull-request report; a clang-format back end; Bazel~9 and Arduino
+  ESP32/ESP8266 support.  In review: a Wireshark Lua dissector back end, a
+  descriptor back end, and mypy typing.
+\item Personal repositories: autocovariance least-squares noise estimation;
+  Intel igb PPS timing; a DKMS kernel-module patch exposing DualSense Edge
+  controls; a real-time PCM to AC-3 (IEC~61937) encoder daemon; ChromeOS
+  fleet automation for a K-12 school (Admin SDK, Chrome Policy API); Emboss
+  definitions for USB-PD, UniFi, and cemuhook protocols.
+\end{list3}
+
+\secsp
 \begin{resitem}[2011--2015]
-{\bf Max Planck Institute for the Science of Light}, Erlangen, Germany\resdate\\
-\textsl{Doctoral researcher, Laboratory of Nanophotonics and Biosensing
-(Dr.~Frank Vollmer).}  Theoretical and experimental research on
-ultrasensitive label-free biodetection.
-\begin{list3}
-\item Invented the centrifugal force quartz crystal microbalance, a
-  force-based biosensor that probes a sample's mechanical properties
-  non-destructively in real time (\emph{Nature Communications} 2014; PCT
-  patent application).
-\item Discovered and modeled a new interference mechanism in conically
-  scattered surface plasmon light, then used plasmon speckle to resolve
-  single-nanoparticle events in an unmodified SPR setup (\emph{Optics
-  Letters} 2013; \emph{Nanotechnology} 2022).
-\item Designed and ran experiments with oligonucleotides, lambda DNA,
-  self-assembled monolayers, and functionalized nanoparticles; built the
-  optics, electronics, and data acquisition for each instrument.  Supervised
-  a master's thesis (Jiapeng Huang, 2014).
-\end{list3}
+\seclabel{Research}{\bf Max Planck Institute for the Science of Light}, Erlangen, Germany\resdate\\
+\textsl{Doctoral researcher (Dr.~Frank Vollmer).}  Invented the centrifugal
+force quartz crystal microbalance, a force-based biosensor that probes a
+sample's mechanical properties non-destructively in real time
+(\emph{Nature Communications} 2014; PCT patent application).  Discovered a
+new interference mechanism in conically scattered surface plasmon light and
+used plasmon speckle to resolve single-nanoparticle events in an unmodified
+SPR setup (\emph{Optics Letters} 2013; \emph{Nanotechnology} 2022).  Built
+the optics, electronics, and data acquisition for each instrument;
+supervised a master's thesis.
 \end{resitem}
 
-\begin{resitem}[2009--2011]
-{\bf Friedrich-Alexander-Universit\"at Erlangen-N\"urnberg} and
-{\bf University of Oregon}\resdate\\
-\textsl{Master's researcher (Prof.~Norbert Lindlein); guest researcher
-(Prof.~Stephen Gregory).}  Modeled ultrashort pulses in the focal region of
-high-NA optics, with a parallel cluster implementation of the discrete
-Fourier transform; simulated surface plasmon polariton multiple scattering
-from apertureless near-field probes.
-\end{resitem}
-
-\begin{resitem}[2007--2009]
-{\bf Light Beam Industries}, Eugene, Oregon\resdate\\
-\textsl{Senior technician, R\&D, optics and electronics.}  Designed digital,
-analog, and mixed-signal circuitry for power, control, and thermal management
-of LED optical products (fifteen documented PCBs, five in production, zero
-functional errors) and built a one-meter integrating sphere for photometry.
-\end{resitem}
-
-\begin{resitem}[2005--2007]
-{\bf University of Oregon}, Eugene, Oregon\resdate\\
-\textsl{Undergraduate research assistant (Prof.~Daniel Steck).}  Built atom
-optics instrumentation: a one-meter scanning Michelson interferometer (1 in
-$10^{6}$ resolution), low-noise high-speed photodiode detectors, a
-high-vacuum single-photon avalanche photodiode housing, and a tunable
-extended-cavity diode laser.
+\begin{resitem}[2005--2011]
+{\bf Earlier research and engineering}\resdate\\
+FAU Erlangen-N\"urnberg (2010--2011): parallel cluster DFT code for
+ultrashort pulses in high-NA optics.  University of Oregon (2005--2010):
+plasmon scattering simulations; atom-optics instruments (scanning Michelson
+wavemeter at 1 in $10^{6}$, low-noise photodetectors, external-cavity diode
+laser).  Light Beam Industries, Eugene (2007--2009), senior R\&D technician:
+fifteen documented PCBs for LED power, control, and thermal management (five
+in production, zero functional errors) and a one-meter integrating sphere.
 \end{resitem}
 
 \rsection{Education}%
@@ -221,7 +253,7 @@ extended-cavity diode laser.
 \vspace{0.2em}
 \\
 {\bf Master of Science, Theoretical Physics: Optics} \hfill 2011\\
-\hspace*{1em}FAU Erlangen-N\"urnberg, Erlangen, Germany.  Thesis: \emph{Ultrashort Pulses in Focal Regions}
+\hspace*{1em}FAU Erlangen-N\"urnberg.  Thesis: \emph{Ultrashort Pulses in Focal Regions}
 \vspace{0.2em}
 \\
 {\bf Master of Science, Applied Physics: Optics} \hfill 2009\\
@@ -230,28 +262,6 @@ extended-cavity diode laser.
 \\
 {\bf Bachelor of Science, Physics} \hfill 2007\\
 \hspace*{1em}University of Oregon, Eugene, Oregon
-
-\secsp
-\begin{list3}
-\item[\lsection{Skills}] {\bf Languages:} C, C++ (modern), Python, Bash
-  (expert); TypeScript/JavaScript, MATLAB/Octave, Tcl, Starlark/Bazel, Perl,
-  SQL, \LaTeX{} (experienced); 6502 and MicroBlaze assembly (working).
-\item {\bf Embedded and hardware:} Xilinx/AMD FPGA platforms (MicroBlaze, AXI,
-  Vivado, bitstreams), JTAG debug, SPI/I\textsuperscript{2}C/UART/MDIO,
-  Ethernet PHYs and 1G/10G data paths, DDR buffering, IEEE~1588 PTP and
-  hardware timestamping, image sensors and camera pipelines, Emboss, Linux
-  kernel modules and DKMS, Debian packaging.
-\item {\bf Modeling and signal processing:} Kalman filtering and smoothing,
-  Allan variance and oscillator noise, Fourier optics, FDTD simulation
-  (meep), finite-element analysis, PID control, MPI/CUDA parallel computing.
-\item {\bf AI-assisted engineering:} Claude Code and MCP server design,
-  autonomous agent workflows with test gates, local LLM inference, hybrid
-  BM25/embedding retrieval (SQLite FTS5, ONNX), PyTorch.
-\item {\bf Electronics and fabrication:} schematic and PCB design, SMT
-  assembly and reflow, mixed-signal debug; manual and CNC machining (Haas,
-  Bridgeport), CAD/CAM (Solid Edge, Mastercam), laser cutting, TIG/MIG/stick
-  welding, spin coating, sputtering.
-\end{list3}
 
 \secsp
 \begin{list3}
@@ -268,25 +278,20 @@ extended-cavity diode laser.
 
 \secsp
 \begin{list3}
-\item[\lsection{Projects}] Open-source Emboss packet definitions for USB
-  Power Delivery, UniFi, and cemuhook protocols.
-\item Patched Linux \texttt{hid-playstation} kernel driver exposing DualSense
-  Edge paddles and function buttons, distributed via DKMS.
-\item Real-time PCM to Dolby Digital (AC-3) IEC~61937 encoder daemon in C;
-  firmware analysis of a Dolby DP564 decoder (MPC860, dual DSPs) for a
-  network audio tap.
-\item HALDO Labs: independent game studio publishing browser games in
-  TypeScript and a 6502 assembly port for the Atari 800.
-\end{list3}
-
-\secsp
-\begin{list3}
-\item[\lsection{Service}] Director, Board of the Canyon Education Foundation
-  \hfill 2026--present
-\item Volunteer technology lead, Canyon Elementary School District: network,
-  Google Workspace administration, website and DNS migration, and ChromeOS
-  fleet automation with the Google Admin SDK and Chrome Policy API
-  \hfill 2021--present
+\item[\lsection{Community}] {\bf Community network, Canyon, CA}
+  (2020--present).  Co-founded a volunteer network sharing school fiber and
+  wireless backhaul with neighbors: about 3,500\,ft of volunteer-run fiber
+  with fusion splicing and OTDR testing, point-to-point wireless links,
+  per-household VLANs and failover.
+\item {\bf Canyon Elementary School District} volunteer IT lead
+  (2018--present): network, Google Workspace and ChromeOS fleet, servers,
+  website.  {\bf Canyon Education Foundation} board member (2026--present).
+\item {\bf Shared GPU and storage server} (2023--present).  Co-built and
+  administer a multi-GPU Linux server with a 58\,TB ZFS pool for a small
+  group of users: local LLM and Whisper inference, media services,
+  Prometheus and Grafana, step-ca SSH certificates, and an OAuth
+  identity-aware proxy.
+\item Amateur radio operator KM6MCS; coordinated repeater W6FMU.
 \end{list3}
 
 \rsection{Languages}%
@@ -294,8 +299,5 @@ English (native),
 German (\href{https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages}{CEF B1}, conversational),
 Spanish (\href{https://en.wikipedia.org/wiki/Common_European_Framework_of_Reference_for_Languages}{CEF A2}).
 
-\let\thefootnote\relax\footnote{\textcolor{white}{%
-Compiled \today, \input{commithash}%
-}}
 
 \end{document}
